@@ -34,7 +34,34 @@ st.write(
 )
 
 # st.divider()
-st.subheader("*:blue[Methodology —]*")
+st.subheader("*:blue[Background —]*")
+st.write(
+    "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
+)
+st.write(
+    "This website is made with web app behavior and user interactivity in mind, thus focusing on the :green[User Interface] & :green[User Experience (UI/UX)] for elivated engagement."
+)
+
+# st.divider()
+st.subheader("*:blue[Problem Description —]*")
+st.write(
+    "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
+)
+st.write(
+    "This website is made with web app behavior and user interactivity in mind, thus focusing on the :green[User Interface] & :green[User Experience (UI/UX)] for elivated engagement."
+)
+
+# st.divider()
+st.subheader("*:blue[Methodology/Solution —]*")
+st.write(
+    "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
+)
+st.write(
+    "This website is made with web app behavior and user interactivity in mind, thus focusing on the :green[User Interface] & :green[User Experience (UI/UX)] for elivated engagement."
+)
+
+# st.divider()
+st.subheader("*:blue[Conclusion —]*")
 st.write(
     "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
 )
