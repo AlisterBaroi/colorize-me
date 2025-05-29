@@ -18,23 +18,14 @@ st.write(text)
 st.divider()
 
 # Abstract
-st.subheader("*:blue[Abstract —]*")
+st.subheader("*:blue[1. Abstract —]*")
 st.write(
     "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
 )
 
 
 # st.divider()
-st.subheader("*:blue[Introduction —]*")
-st.write(
-    "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
-)
-st.write(
-    "This website is made with web app behavior and user interactivity in mind, thus focusing on the :green[User Interface] & :green[User Experience (UI/UX)] for elivated engagement."
-)
-
-# st.divider()
-st.subheader("*:blue[Background —]*")
+st.subheader("*:blue[2. Introduction & Background —]*")
 st.write(
     "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
 )
@@ -43,7 +34,7 @@ st.write(
 )
 
 # st.divider()
-st.subheader("*:blue[Problem Description —]*")
+st.subheader("*:blue[3. Problem Description —]*")
 st.write(
     "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
 )
@@ -52,7 +43,7 @@ st.write(
 )
 
 # st.divider()
-st.subheader("*:blue[Methodology/Solution —]*")
+st.subheader("*:blue[4. Methodology/Solution —]*")
 st.write(
     "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
 )
@@ -61,7 +52,7 @@ st.write(
 )
 
 # st.divider()
-st.subheader("*:blue[Conclusion —]*")
+st.subheader("*:blue[5. Conclusion —]*")
 st.write(
     "This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
 )
@@ -70,7 +61,7 @@ st.write(
 )
 
 # st.divider()
-st.subheader("*:blue[References —]*")
+st.subheader("*:blue[6. References —]*")
 st.write(
     "[1] This website is build by me :red[(Alister Baroi / Alister Animesh Baroi)], as my online resume, & as my porfolio website, to showcase coding skills & projects."
     "[2] asdsad"
