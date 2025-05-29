@@ -3,8 +3,13 @@ from torchvision import transforms
 from PIL import Image
 
 
+def readImg(image):
+    return Image.open(image)
+
+
 def resizeImg(image, sizeamt):
     return transforms.Resize(size=sizeamt)(Image.open(image))
+    # return Image.open(image)
 
 
 # import the required libraries
