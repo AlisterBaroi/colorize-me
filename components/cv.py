@@ -1,6 +1,16 @@
 import streamlit as st
+import numpy as np
+import cv2
 from torchvision import transforms
 from PIL import Image
+
+prototxt_path = "./models/colorization_deploy_v2.prototxt"
+model_path = "./models/colorization_release_v2.caffemodel"
+kernel_path = "./models/pts_in_hull.npy"
+
+# prototxt_path = r"D:\Others\colorize-me\models\colorization_deploy_v2.prototxt"
+# model_path = r"D:\Others\colorize-me\models\colorization_release_v2.caffemodel"
+# kernel_path = r"D:\Others\colorize-me\models\pts_in_hull.npy"
 
 
 def readImg(image):
@@ -12,21 +22,40 @@ def resizeImg(image, sizeamt):
     # return Image.open(image)
 
 
-# import the required libraries
-# import torch
-# import torchvision.transforms as T
-# from PIL import Image
+def colorize(image):
+    model = cv2.dnn.readNetFromCaffe(prototxt_path, model_path)
+    # st.write(model.getLayerNames())
 
-# # read the input image
-# img = Image.open("lounge.jpg")
+    # if model.empty():
+    #     raise RuntimeError("Model failed to load.")
 
-# # compute the size(width, height) of image
-# size = img.size
-# print("Size of the Original image:", size)
+    # if model.getLayerId("conv8_313_rh") == -1:
+    #     raise RuntimeError(
+    #         "Layer 'conv8_313_rn' not found in model. Are you using the correct files?"
+    #     )
+    points = np.load(kernel_path).transpose().reshape(2, 313, 1, 1)
+    model.getLayer(model.getLayerId("class8_ab")).blobs = [points.astype(np.float32)]
+    model.getLayer(model.getLayerId("conv8_313_rh")).blobs = [
+        np.full([1, 313], 2.606, dtype="float32")
+    ]
+    # image2 = np.array(image)  # Ensure RGB
+    image2 = np.array(image.convert("RGB"))  # Ensure RGB
+    # image2 = cv2.cvtColor(image2, cv2.COLOR_RGB2BGR)  # Convert to BGR for OpenCV)
+    bw_im = image2
+    normalize = bw_im.astype("float32") / 255.0
+    # Louminousity, and colors (A, B)
+    LAB = cv2.cvtColor(normalize, cv2.COLOR_BGR2LAB)
+    rescale = cv2.resize(LAB, (224, 224))
+    L = cv2.split(rescale)[0]
+    L -= 50
+    model.setInput(cv2.dnn.blobFromImage(L))
+    ab = model.forward()[0, :, :, :].transpose((1, 2, 0))
+    # ab = cv2.resize(ab, bw_im.shape[1], bw_im.shape[0])
+    ab = cv2.resize(ab, (bw_im.shape[1], bw_im.shape[0]))
 
-# # define transformt o resize the image with given size
-# transform = T.Resize(size=(250, 450))
-
-# # apply the transform on the input image
-# img = transform(img)
-# print("Size after resize:", img.size)
+    L = cv2.split(LAB)[0]
+    colorized = np.concatenate((L[:, :, np.newaxis], ab), axis=2)
+    # colorized = cv2.cvtColor(colorized, cv2.COLOR_LAB2BGR)
+    colorized = cv2.cvtColor(colorized, cv2.COLOR_LAB2RGB)
+    colorized = (255 * colorized).astype("uint8")
+    return colorized

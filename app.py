@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_image_comparison import image_comparison
-from components.cv import resizeImg, readImg
+from components.cv import resizeImg, readImg, colorize
 
 st.set_page_config(
     page_title="Colorize Me",
@@ -29,11 +29,12 @@ with st.container(border=False):
         #     st.image(a, caption="Colorized Preview", width=None)
         #     pass
         # row0[0].write()
+        c = colorize(readImg(uploaded_file))
         with row0[1]:
             a = resizeImg(uploaded_file, 360)
             image_comparison(
                 img1=readImg(uploaded_file),
-                img2=a,
+                img2=c,
                 label1="Original",
                 label2="Colorized",
                 width=550,
