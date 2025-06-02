@@ -1,6 +1,6 @@
 import streamlit as st
 import numpy as np
-import cv2
+import cv2, io
 from torchvision import transforms
 from PIL import Image
 
@@ -13,8 +13,27 @@ kernel_path = "./models/pts_in_hull.npy"
 # kernel_path = r"D:\Others\colorize-me\models\pts_in_hull.npy"
 
 
+@st.dialog("Upload Error")
+def error():
+    st.error("**Filename Error:** Contains multiple ' . ' in the filename")
+    if st.button("Retry"):
+        st.rerun()
+
+
+# Reads image and returns as numpy array, and file name
 def readImg(image):
-    return Image.open(image)
+    if image.name.count(".") != 1:
+        error()
+    a, b = image.name.split(".")
+    return Image.open(image), (f"{a}_colorized.{b}")
+
+
+def readNPArray(image):
+    im = Image.fromarray(image)
+    with io.BytesIO() as f:
+        im.save(f, format="PNG")
+        data = f.getvalue()
+    return data
 
 
 def resizeImg(image, sizeamt):
