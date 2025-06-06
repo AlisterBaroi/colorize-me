@@ -17,34 +17,17 @@ st.divider()
 
 # 1. Abstract
 st.subheader("*:blue[Abstract —]*")
-# st.write(
-#     """
-#     This project takes greyscale (or existing color) images and automatically infers plausible colors using a feed-forward pass through a Convolutional Neural Network (CNN). The underlying model is based on the paper *:green["Colorful Image Colorization"]* as described by Zhang et al [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40). This white paper summarises:
-
-#     1. The problem of single-image colorisation.
-#     2. The network architecture and color-space transformations.
-#     3. Implementation details (code structure, dependencies, and Streamlit UI).
-#     4. Example results and usage.
-#     5. Conclusions and potential extensions.
-#     """
-# )
-st.write(
+st.markdown(
     """
+    <p style='text-align: justify;'>
     This project addresses the challenge of restoring natural color to greyscale images by leveraging a pre-trained Convolutional Neural Network (CNN) to predict chromatic information from luminance alone. In this work, any input image, whether a purely greyscale (Black & White) image or an existing color image stripped of its chromatic channels, is converted into the CIELAB (also known as `LAB`) color space, and only the lightness channel is fed into the network. The network has been trained to map each pixel's lightness to a plausible distribution over chroma values, enabling it to infer realistic colors that are spatially coherent across objects and scenes. After obtaining the predicted chroma layers, these are upscaled to the original image resolution and recombined with the original lightness, producing a fully colorized/recolorized output. This entire pipeline is wrapped in a lightweight Streamlit web interface, where users can upload an image, immediately view a side-by-side comparison of the original and the colorized result, and download the new image file. The result is a seamless, real-time application that demonstrates how the latest neural-based colorisation techniques can be packaged in Python to create an engaging, user-friendly experience. By combining deep learning inference, efficient color-space transformations, and a simple web front end, this project serves both as a practical tool and as a portfolio piece showcasing end-to-end AI implementation in Python.
-    """
+    </p>
+    """,
+    unsafe_allow_html=True,
 )
 
 # 2. Introduction & Background
 st.subheader("*:blue[1. Introduction & Background —]*")
-
-# st.write(
-#     """
-#     Greyscale images lack chromatic information, which can make them appear flat or less engaging. Restoring color to a single greyscale image is inherently ambiguous, there are many possible plausible color assignments for any given pixel. Traditional hand-tinting methods require significant manual effort, and
-#     earlier automated approaches (e.g. example-based transfer) often rely on a reference color image.
-
-#     In 2016, Zhang et al. proposed a fully automatic, end-to-end CNN that, given only the lightness channel (L) in CIELAB space, predicts a probability distribution over possible :green['a'] and :green['b'] color channels. By learning a broad mapping from :green[***L → (a, b)***], the network can produce realistic, richly colored outputs with no user intervention [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40).
-# """
-# )
 st.write(
     """
     Colorising greyscale images is a longstanding problem in computer vision, dating back several decades when practitioners attempted to hand-tint black-and-white photographs or develop rule-based algorithms. Modern approaches, however, rely on data-driven methods that learn plausible mappings from luminance to chrominance. In this project, we build upon the foundational work of :green[Zhang et al.] (in their paper :green[***"Colorful Image Colorization"***]) who introduced a fully automatic, end-to-end CNN that predicts color (`A` and `B` channels in `LAB` space) from lightness (`L` channel) alone [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40). Their method addresses the core ambiguities that arise when inferring color, where a single grey value may correspond to many possible real-world hues; and ensuring spatial consistency across complex scenes is non-trivial.
@@ -73,34 +56,18 @@ st.write(
     5. **Software and Frameworks:**  
        - **OpenCV (`cv2.dnn`):** Used to load the Caffe model, perform forward passes, and handle color-space conversions.  
        - **Streamlit:** Provides a lightweight web framework for rapid prototyping. Users can upload images, view real-time before/after comparisons, and download the colorized output.  
-       - **Torch and Torchvision:** Employed in `components/cv.py` for resizing and tensor transformations, though all core inference occurs in OpenCV’s DNN module.
+       - **Torch and Torchvision:** Employed in `components/cv.py` for resizing and tensor transformations, though all core inference occurs in OpenCV's DNN module.
 
     6. **Motivation for a Web-Based Demo:**  
        - While many colorization demos exist as standalone scripts or notebooks, embedding the pipeline within Streamlit allows immediate, zero-configuration interaction.  
        - This approach showcases an end-to-end AI deployment: from preprocessing and model inference to post-processing and user interaction, all in pure Python.
 
-    By combining these elements (`LAB` conversions, a pre-trained CNN, and a simple web interface) this project demonstrates how complex Deep Learning pipelines can be distilled into a real-time, user-friendly application. In the following sections, we delve into the problem statement, detailed methodology, and implementation specifics.
+    > By combining these elements (`LAB` conversions, a pre-trained CNN, and a simple web interface) this project demonstrates how complex Deep Learning pipelines can be distilled into a real-time, user-friendly application. In the following sections, we delve into the problem statement, detailed methodology, and implementation specifics.
     """
 )
 
 # 3. Problem Description
 st.subheader("*:blue[2. Problem Description —]*")
-# st.write(
-#     """
-#     **Objective:** Given an input that is either:
-#     1. A truly greyscale (LAB) image
-#     2. A color image (RGB) whose chroma we want to re-infer from its luminosity
-
-#     produce a colorized/recolorized RGB image that looks natural.
-
-#     **Key challenges include:**
-#     - **Ambiguity of color:** A neutral grey pixel could correspond to many real-world colors (e.g. sky, metal,
-#       foliage).
-#     - **Spatial consistency:** Neighbouring pixels must have coherent colors (trees should all be green, skin tones
-#       consistent, etc.).
-#     - **High-resolution inference:** The network takes a 224×224-pixel input; results must be upscaled to the original (uploaded) image sizes without visible artefacts.
-#     """
-# )
 st.write(
     """
     The core objective of this project is to take any input image, whether a genuine greyscale (black & white) photograph or an existing colour image with its chromatic channels removed, and produce a fully colorized output that appears natural and coherent. In practice, this means inferring plausible `A`, `B` chroma values for every pixel using only the lightness (`L`) channel as input. Although this task may sound straightforward, it presents several inherent challenges:
@@ -120,7 +87,7 @@ st.write(
     4. **Real-Time Inference:**  
        - To offer a seamless user experience, the entire pipeline (colour-space conversion, forward pass through the network, upscaling and post-processing) must execute in under a second on typical modern hardware.
 
-    Together, these challenges define a problem space where both perceptual quality and computational efficiency must be balanced. The subsequent Methodology section explains how colour-space transformations, a pre-trained CNN, and post-processing strategies address each of these issues.
+    > Together, these challenges define a problem space where both perceptual quality and computational efficiency must be balanced. The subsequent Methodology section explains how colour-space transformations, a pre-trained CNN, and post-processing strategies address each of these issues.
     
     """
 )
@@ -140,7 +107,6 @@ st.write(
          - **`A`**, **`B`** channels (chromaticity, range approximately -128 to 127)  
       3. Only the **`L`** channel is extracted and resized to `224×224` pixels using bilinear interpolation (`cv2.resize`). This maintains compatibility with the pretrained CNN's expected input size and preserves the original luminance structure.
 
-
     **3.2. CNN Architecture (Zhang et al. [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40))**  
     - **Model Overview:**  
       1. The network is a modified VGG-style encoder with dilated convolutions in later layers to retain spatial resolution.  
@@ -154,7 +120,6 @@ st.write(
       2. Create a 4D blob via `cv2.dnn.blobFromImage(L_resized)` (shape: `1×1×224×224`).  
       3. `net.setInput(blob)` and call `net.forward()` to obtain a raw output of shape `1×313×56×56` (for example).  
       4. Decode this into a `56×56×2` map of predicted `A`, `B` values by multiplying the softmax probabilities with the corresponding cluster centres and summing across the 313 bins.
- 
 
     **3.3. Post-processing**  
     - **Upscaling Predicted Channels:**  
@@ -166,7 +131,6 @@ st.write(
     - **De-normalisation & Data Type Conversion:**  
       1. Multiply all `RGB` channels by 255, clip values to the `[0, 255]` range, and convert to `uint8`.  
       2. The result is a colorized `RGB` NumPy array suitable for display or file export.
- 
 
     **3.4. Web-app Front End (Streamlit)**  
     - **File Uploader & Validation:**  
@@ -235,7 +199,6 @@ st.write(
         - Upscales `(A, B)` to original resolution, recombines with `L`, converts back to `RGB`.  
         - Returns a `uint8` RGB NumPy array.
 
-
     **4.3. Dependencies (from `requirements.txt`):**  
     ```
     numpy
@@ -261,8 +224,7 @@ st.write(
     - **`colorization_release_v2.caffemodel`:** Contains pre-trained weights (Zhang et al.).  
     - **`pts_in_hull.npy`:** A `313×2` array of cluster centres in (A, B) space (used to "soft-encode" predictions).
 
-
-    This detailed breakdown illustrates how each file and function collaborates to transform a simple image upload into a fully colorized output, bridging theory (the Zhang et al. architecture) with practical, production-ready code [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40).  
+    > This detailed breakdown illustrates how each file and function collaborates to transform a simple image upload into a fully colorized output, bridging theory (the Zhang et al. architecture) with practical, production-ready code [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40).  
     """
 )
 
