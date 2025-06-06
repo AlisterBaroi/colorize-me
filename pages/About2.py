@@ -50,8 +50,8 @@ st.write(
        - A rebalancing layer (`conv8_313_rh`) enables the model to place higher weight on rarer colors during training, reducing bias toward desaturated outputs.
 
     4. **Training Data and Pretrained Weights:**  
-       - Zhang et al. trained their model on millions of images from ImageNet and other large-scale datasets [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40).  
-       - We rely on their publicly available prototxt and caffemodel files, along with the `pts_in_hull.npy` cluster centres, which encapsulate the original training distribution [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40).
+       - Zhang et al. trained their model on millions of images from ImageNet and other large-scale datasets [[ 2 ]](#2-richzhang-git-hub-richzhang-colorization-automatic-colorization-using-deep-neural-networks-colorful-image-colorization-in-eccv-2016-git-hub-available-github-com-richzhang-colorization).  
+       - We rely on their publicly available prototxt and caffemodel files, along with the `pts_in_hull.npy` cluster centres, which encapsulate the original training distribution [[ 1, 2 ]](#7-references).
 
     5. **Software and Frameworks:**  
        - **OpenCV (`cv2.dnn`):** Used to load the Caffe model, perform forward passes, and handle color-space conversions.  
@@ -248,7 +248,7 @@ st.write(
        - *Input:* A full-color image.  
        - *Output:* The model discards original (A, B) channels, infers fresh colors from L (e.g. slight hue shifts).  
 
-    > *Tip:* If you have a public Streamlit share link or GIFs of the “before/after” widget, embed them below.
+    > These examples demonstrated how quickly and accurately the pre-trained CNN was also to colorize a wide variety of inputs, from portraits to landscapes to high-resolution photographs, all within a few hundred milliseconds on modern hardware.
     """
 )
 
@@ -256,29 +256,24 @@ st.write(
 st.subheader("*:blue[6. Conclusion —]*")
 st.write(
     """
-    “Colorize Me” demonstrates how a pretrained CNN (by Zhang et al.) can be wrapped in a lightweight Streamlit interface to provide real-time single-image colorisation [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40). Key takeaways:
-
-    - **Simplicity:** With just three model files (prototxt, caffemodel, pts_in_hull), we can produce
-      high-quality full-color outputs in under a second (on modern hardware).  
-    - **Extensibility:** Future work could integrate user controls (e.g. “scribble” hints), try alternative
-      colorisation networks (GAN-based, U-Net), or deploy via Flask/Django for production.  
-    - **Education & Portfolio:** This live demo serves both as an illustration of deep learning pipelines (color
-      space conversions, DNN inference) and a portfolio piece showcasing Python + AI expertise.
+    This project (:green[Colorize Me]) demonstrates how a pre-trained CNN (by Zhang et al.) can be seamlessly integrated into a lightweight Streamlit application to deliver real-time, high-quality colourisation of greyscale or desaturated images. By leveraging LAB conversions, a publicly available Caffe model, and careful upscaling/post-processing, the pipeline produces natural, spatially coherent colours with minimal computation. The intuitive web interface, complete with upload, interactive comparison, and download, showcases an end-to-end AI deployment in pure Python. Future enhancements might include user-guided hints (e.g., colour scribbles), alternative neural architectures (GAN-based or U-Net), or containerised deployment for scalable production use. As a portfolio piece, this project highlights expertise in deep learning inference, efficient image processing, and rapid web prototyping.
     """
 )
+# st.write(
+#     """
+#     “Colorize Me” demonstrates how a pretrained CNN (by Zhang et al.) can be wrapped in a lightweight Streamlit interface to provide real-time single-image colorisation [[ 1 ]](#1-r-zhang-p-isola-and-a-a-efros-colorful-image-colorization-in-computer-vision-eccv-2016-2016-pp-649-666-doi-10-1007-978-3-319-46487-9-40). Key takeaways:
+
+#     - **Simplicity:** With just three model files (prototxt, caffemodel, pts_in_hull), we can produce
+#       high-quality full-color outputs in under a second (on modern hardware).
+#     - **Extensibility:** Future work could integrate user controls (e.g. “scribble” hints), try alternative
+#       colorisation networks (GAN-based, U-Net), or deploy via Flask/Django for production.
+#     - **Education & Portfolio:** This live demo serves both as an illustration of deep learning pipelines (color
+#       space conversions, DNN inference) and a portfolio piece showcasing Python + AI expertise.
+#     """
+# )
 
 # 8. References
 st.subheader("*:blue[7. References —]*")
-# st.write(
-#     """
-#     1. **Zhang, R., Isola, P., & Efros, A. A. (2016).** Colorful Image Colorization. In *European Conference on
-#        Computer Vision (ECCV)*, Springer. DOI: [10.1007/978-3-319-46487-9_40](https://doi.org/10.1007/978-3-319-46487-9_40).
-#     2. **GitHub Repo (Zhang et al.):**
-#        https://github.com/richzhang/colorization (accessed June 2025).
-#     3. **OpenCV Documentation:** color space conversion (cv2.cvtColor).
-#     4. **Streamlit:** https://docs.streamlit.io/ (accessed June 2025).
-#     """
-# )
 st.markdown(
     """    
     ###### :green[[1]] **R. Zhang, P. Isola, and A. A. Efros**. "Colorful Image Colorization", in *Computer Vision* -- ECCV 2016, 2016, pp. 649-666, doi: [10.1007/978-3-319-46487-9_40](https://doi.org/10.1007/978-3-319-46487-9_40).
@@ -286,24 +281,3 @@ st.markdown(
     ###### :green[[2]] richzhang, "GitHub - richzhang/colorization: Automatic colorization using deep neural networks. 'Colorful Image Colorization.' In ECCV, 2016.," GitHub, available: [github.com/richzhang/colorization](https://github.com/richzhang/colorization).
     """,
 )
-
-# st.subheader(
-#     """
-#     [1] **R. Zhang, P. Isola, and A. A. Efros**. "Colorful Image Colorization", in *Computer Vision* -- ECCV 2016, 2016, pp. 649-666, doi: [10.1007/978-3-319-46487-9_40](https://doi.org/10.1007/978-3-319-46487-9_40).
-#     """,
-#     anchor="ref1",
-# )
-# st.subheader(
-#     """
-#     [2] richzhang, "GitHub - richzhang/colorization: Automatic colorization using deep neural networks. 'Colorful Image Colorization.' In ECCV, 2016.," GitHub, available: [github.com/richzhang/colorization](https://github.com/richzhang/colorization).
-#     """,
-#     anchor="ref2",
-# )
-# st.subheader(
-#     """
-#     [2]
-
-#     richzhang, "GitHub - richzhang/colorization: Automatic colorization using deep neural networks. 'Colorful Image Colorization.' In ECCV, 2016.," GitHub, available: [github.com/richzhang/colorization](https://github.com/richzhang/colorization).
-#     """,
-#     anchor="ref2",
-# )
