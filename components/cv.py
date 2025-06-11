@@ -3,6 +3,7 @@ import numpy as np
 import cv2, io
 from torchvision import transforms
 from PIL import Image
+from components.utilities import error
 
 prototxt_path = "./models/colorization_deploy_v2.prototxt"
 model_path = "./models/colorization_release_v2.caffemodel"
@@ -11,13 +12,6 @@ kernel_path = "./models/pts_in_hull.npy"
 # prototxt_path = r"D:\Others\colorize-me\models\colorization_deploy_v2.prototxt"
 # model_path = r"D:\Others\colorize-me\models\colorization_release_v2.caffemodel"
 # kernel_path = r"D:\Others\colorize-me\models\pts_in_hull.npy"
-
-
-@st.dialog("Upload Error")
-def error():
-    st.error("**Filename Error:** Contains multiple ' . ' in the filename")
-    if st.button("Retry"):
-        st.rerun()
 
 
 # Reads image and returns as numpy array, and file name
