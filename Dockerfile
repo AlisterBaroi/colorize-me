@@ -22,10 +22,17 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 # System deps needed at runtime by OpenCV etc.
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     libgl1 \
+#     libglib2.0-0 \
+#     && rm -rf /var/lib/apt/lists/*
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgl1 \
     libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+    curl \
+    ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY . .
@@ -40,16 +47,23 @@ COPY . .
 
  # Overwrite any LFS pointer with the real model binary (pin to a commit)
 # (Using raw.githubusercontent.com to avoid HTML redirects)
-RUN curl -fsSL -o models/colorization_release_v2.caffemodel \
+# RUN curl -fsSL -o models/colorization_release_v2.caffemodel \
+#     https://raw.githubusercontent.com/AlisterBaroi/colorize-me/3c6a6de95ff58f755ec35364bd33a51cb748e822/models/colorization_release_v2.caffemodel \
+#  && python - <<'PY'
+# import os, sys
+# p = "models/colorization_release_v2.caffemodel"
+# s = os.path.getsize(p)
+# print(p, "size:", s, "bytes")
+# # Fail the build if it looks suspiciously small (e.g. an LFS pointer)
+# sys.exit(0 if s > 1_000_000 else 1)
+# PY
+
+
+# Ensure models dir, fetch the caffemodel, and verify it's not an LFS pointer
+RUN mkdir -p models \
+ && curl -fsSL -o models/colorization_release_v2.caffemodel \
     https://raw.githubusercontent.com/AlisterBaroi/colorize-me/3c6a6de95ff58f755ec35364bd33a51cb748e822/models/colorization_release_v2.caffemodel \
- && python - <<'PY'
-import os, sys
-p = "models/colorization_release_v2.caffemodel"
-s = os.path.getsize(p)
-print(p, "size:", s, "bytes")
-# Fail the build if it looks suspiciously small (e.g. an LFS pointer)
-sys.exit(0 if s > 1_000_000 else 1)
-PY
+ && python -c "import os,sys; p='models/colorization_release_v2.caffemodel'; s=os.path.getsize(p); print(p,'size:',s,'bytes'); sys.exit(0 if s>1000000 else 1)"
 
 # Upgrade pip first; then install Python deps
 RUN pip install --upgrade pip \
