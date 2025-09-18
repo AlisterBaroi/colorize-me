@@ -38,5 +38,5 @@ RUN pip install --upgrade pip \
 ENV PORT=8080
 
 # Streamlit entrypoint
-# CMD ["streamlit", "run", "Colorize_Me.py", "--server.address=0.0.0.0", "--server.port=8080"]
-CMD ["streamlit", "run", "Colorize_Me.py", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["streamlit", "run", "Colorize_Me.py", "--server.address=0.0.0.0", "--server.port=8080"]
+# CMD ["streamlit", "run", "Colorize_Me.py", "--host", "0.0.0.0", "--port", "8080"]
