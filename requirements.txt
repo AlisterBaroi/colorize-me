@@ -19,8 +19,8 @@ mpmath==1.3.0
 narwhals==1.41.0
 networkx==3.4.2
 numpy==1.26.4
-# opencv-python==4.8.1.78
-opencv-python==4.10.0.84
+opencv-python==4.8.1.78
+# opencv-python==4.10.0.84
 packaging==24.2
 pandas==2.2.3
 pillow==11.2.1
@@ -46,4 +46,5 @@ typing_extensions==4.13.2
 tzdata==2025.2
 urllib3==2.4.0
 watchdog==6.0.0
+
 
