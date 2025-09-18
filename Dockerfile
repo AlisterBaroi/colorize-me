@@ -30,6 +30,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 COPY . .
 
+# Fetch model files at build time (pinned URLs from OpenCV repos)
+RUN mkdir -p models \
+ && curl -L -o models/colorization_release_v2.caffemodel \
+      # https://raw.githubusercontent.com/opencv/opencv_extra/master/testdata/dnn/colorization_release_v2.caffemodel \
+      https://github.com/AlisterBaroi/colorize-me/raw/3c6a6de95ff58f755ec35364bd33a51cb748e822/models/colorization_release_v2.caffemodel \
+ && ls -lh models
+
 # Upgrade pip first; then install Python deps
 RUN pip install --upgrade pip \
  && pip install --no-cache-dir -r requirements.txt
