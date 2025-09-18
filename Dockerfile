@@ -103,9 +103,11 @@ COPY . .
 
 # Ensure models dir, fetch the caffemodel, and verify it's not an LFS pointer
 RUN mkdir -p models \
- && curl -fsSL -o models/colorization_release_v2.caffemodel \
-    https://raw.githubusercontent.com/AlisterBaroi/colorize-me/3c6a6de95ff58f755ec35364bd33a51cb748e822/models/colorization_release_v2.caffemodel \
- && python -c "import os,sys; p='models/colorization_release_v2.caffemodel'; s=os.path.getsize(p); print(p,'size:',s,'bytes'); sys.exit(0 if s>1000000 else 1)"
+&& curl -fL --retry 5 --retry-connrefused --retry-delay 2 \
+    -o models/colorization_release_v2.caffemodel \
+    "https://github.com/AlisterBaroi/colorize-me/blob/3c6a6de95ff58f755ec35364bd33a51cb748e822/models/colorization_release_v2.caffemodel?raw=1" \
+&& python -c "import os,sys; p='models/colorization_release_v2.caffemodel'; s=os.path.getsize(p); print(p,'size:',s,'bytes'); sys.exit(0 if s>1000000 else 1)"
+
 
 # Cloud Run listens on $PORT; default to 8080
 ENV PORT=8080
