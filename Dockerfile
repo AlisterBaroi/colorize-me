@@ -31,11 +31,25 @@ WORKDIR /app
 COPY . .
 
 # Fetch model files at build time (pinned URLs from OpenCV repos)
-RUN mkdir -p models \
- && curl -L -o models/colorization_release_v2.caffemodel \
-      # https://raw.githubusercontent.com/opencv/opencv_extra/master/testdata/dnn/colorization_release_v2.caffemodel \
-      https://github.com/AlisterBaroi/colorize-me/raw/3c6a6de95ff58f755ec35364bd33a51cb748e822/models/colorization_release_v2.caffemodel \
- && ls -lh models
+# RUN mkdir -p models \
+#  && curl -L -o models/colorization_release_v2.caffemodel \
+#       # https://raw.githubusercontent.com/opencv/opencv_extra/master/testdata/dnn/colorization_release_v2.caffemodel \
+#       https://github.com/AlisterBaroi/colorize-me/raw/3c6a6de95ff58f755ec35364bd33a51cb748e822/models/colorization_release_v2.caffemodel \
+#  && ls -lh models
+
+
+ # Overwrite any LFS pointer with the real model binary (pin to a commit)
+# (Using raw.githubusercontent.com to avoid HTML redirects)
+RUN curl -fsSL -o models/colorization_release_v2.caffemodel \
+    https://raw.githubusercontent.com/AlisterBaroi/colorize-me/3c6a6de95ff58f755ec35364bd33a51cb748e822/models/colorization_release_v2.caffemodel \
+ && python - <<'PY'
+import os, sys
+p = "models/colorization_release_v2.caffemodel"
+s = os.path.getsize(p)
+print(p, "size:", s, "bytes")
+# Fail the build if it looks suspiciously small (e.g. an LFS pointer)
+sys.exit(0 if s > 1_000_000 else 1)
+PY
 
 # Upgrade pip first; then install Python deps
 RUN pip install --upgrade pip \
